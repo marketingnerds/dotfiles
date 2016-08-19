@@ -1,0 +1,28 @@
+#!/bin/bash
+
+device="${BLOCK_INSTANCE}"
+status=$(cat /sys/class/net/${device}/operstate)
+
+URGENT_VALUE=20
+
+IP=$(ip a s|sed -ne '/127.0.0.1/!{s/^[ \t]*inet[ \t]*\([0-9.]\+\)\/.*$/\1/p}')
+
+if [[ "${status}" == "up" ]]; then
+    if [[ -d "/sys/class/net/${device}/wireless" ]]; then
+        quality=$(grep ${device} /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+        echo "${quality}%"
+        if [[ "${quality}" -le "${URGENT_VALUE}" ]]; then
+            exit 33
+        fi
+    else
+        RXB=$(cat /sys/class/net/enp0s25/statistics/rx_bytes)
+        TXB=$(cat /sys/class/net/enp0s25/statistics/tx_bytes)
+        sleep 2
+        RXBN=$(cat /sys/class/net/enp0s25/statistics/rx_bytes)
+        TXBN=$(cat /sys/class/net/enp0s25/statistics/tx_bytes)
+        RXDIF=$(echo $((RXBN - RXB)) )
+        TXDIF=$(echo $((TXBN - TXB)) )
+
+        echo " ${IP} $((RXDIF / 131072 / 2))Mb/$((TXDIF / 131072 / 2))Mb"
+    fi
+fi

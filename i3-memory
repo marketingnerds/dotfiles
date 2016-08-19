@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MEMTOTAL="$(grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=0; {}/1024^2" | bc)"
+MEMFREE="$(grep MemFree /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=0; {}/1024^2" | bc)"
+
+MEMUSED=$(echo "scale=0; ${MEMTOTAL} - ${MEMFREE}" | bc)
+MEMPERC=$(echo "scale=2; 100 * (${MEMUSED} / ${MEMTOTAL})" | bc)
+
+echo " ${MEMUSED}G/${MEMTOTAL}G ${MEMPERC%???}%"

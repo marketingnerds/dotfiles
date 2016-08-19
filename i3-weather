@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+WEATHER=$(curl -s http://api.wunderground.com/api/3d242cdee5f14553/conditions/q/VA/Virginia_Beach.json -o weather.json)
+TEMP=$(cat weather.json | grep temp_f | sed 's/^.\{11\}//' | sed 's/.\{1\}$//')
+COND=$(cat weather.json | grep weather\" | sed 's/^.\{13\}//' | sed 's/.\{2\}$//')
+
+# Keep an eye on font-awesome for better weather icons
+# http://fontawesome.io/cheatsheet/
+
+# Current conditions glossary
+# https://www.wunderground.com/weather/api/d/docs?d=resources/phrase-glossary
+
+if [[ "$COND" == *"Cloud"* ]] || [[ "$COND" == *"Overcast"* ]]; then
+    ICON=""
+elif  [[ "$COND" == "Clear" ]]; then
+    ICON=""
+elif  [[ "$COND" == *"Rain"* ]] || [[ "$COND" == *"Drizzle"* ]] || [[ "$COND" == *"Fog"* ]]; then
+    ICON=""
+elif  [[ "$COND" == "Thunder" ]]; then
+    ICON=""
+else
+    ICON=""
+fi
+
+echo "${ICON} ${TEMP}°"
+
+#echo "${COND}"
