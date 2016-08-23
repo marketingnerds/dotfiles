@@ -4,11 +4,10 @@
 # Should you change your keyboard layout some time, delete
 # this file and re-run i3-config-wizard(1).
 #
-# ~/.config/i3/config
-#
 
 exec --no-startup-id feh --bg-center ~/arch_linux_darkwave_by_balancest.jpg
 exec --no-startup-id xrandr --output HDMI-2 --auto --above eDP-1
+exec --no-startup-id ~/.dropbox-dist/dropboxd
 #exec --no-startup-id nm-applet
 #exec --no-startup-id /usr/libexec/gnome-settings-daemon
 
@@ -161,6 +160,7 @@ set $lightmagenta     #AD7FA8
 set $lightred         #EF2929
 set $lightyellow      #FCE94F
 set $lightorange      #FCAF3E
+set $lightgrey        #EEEEEE
 
 # tango normal
 set $blue         #3465A4
@@ -192,7 +192,7 @@ bar {
     urgent_workspace  $red $darkred $white
     background #222222
     separator  #444444
-    statusline $darkgrey
+    statusline $lightgrey
     }
 }
 
